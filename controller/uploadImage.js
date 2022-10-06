@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const { uuid } = require("uuidv4");
-const Post = require("../model/Post");
+const UploadImage = require("../model/UploadImage");
 require("dotenv").config();
 
 const awsConfig = {
@@ -63,11 +63,11 @@ exports.createPost = async (req, res) => {
       return res.status(422).json({ error: "Please add Image" });
     }
 
-    const imageInfo = Post({
+    const imageInfo = UploadImage({
       original_image,
     });
 
-    const uploadimage = await Post.create(imageInfo);
+    const uploadimage = await UploadImage.create(imageInfo);
     res.status(201).json(uploadimage);
   } catch (error) {
     res.status(400).json({ error: "Something went wrong" });
@@ -78,7 +78,7 @@ exports.createPost = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const postDetails = await Post.find().sort({ date: "DESC" });
+    const postDetails = await UploadImage.find().sort({ date: "DESC" });
     res.status(200).json(postDetails);
   } catch (error) {
     res.status(400).json({ error: "Something went wrong" });
@@ -91,11 +91,11 @@ exports.deletePost = async (req, res) => {
   const postId = { _id: req.params.id };
 
   try {
-    const singlePost = await Post.findOne(postId);
+    const singlePost = await UploadImage.findOne(postId);
     if (!singlePost)
       return res.status(404).json({ error: "Post could not found" });
 
-    const deletePost = await Post.findByIdAndDelete(postId);
+    const deletePost = await UploadImage.findByIdAndDelete(postId);
 
     res.status(200).json({ message: "Post deleted", deletePost });
   } catch (error) {

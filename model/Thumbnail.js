@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 var thumbnailSchema = mongoose.Schema({
 
-  thumbnail: {},
+  thumbnail: {
+    type: String,
+    required: true,
+  },
 
   date: {
     type: Date,
