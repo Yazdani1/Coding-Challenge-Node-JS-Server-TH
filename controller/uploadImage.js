@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const { uuid } = require("uuidv4");
-const UploadImage = require("../model/UploadImage");
+const Post = require("../model/Post");
 require("dotenv").config();
 
 const awsConfig = {
@@ -13,7 +13,7 @@ const awsConfig = {
 
 const S3 = new AWS.S3(awsConfig);
 
-// to upload image to aws s3
+// to upload image
 exports.uploadImage = async (req, res) => {
   try {
     const { image } = req.body;
@@ -63,11 +63,11 @@ exports.createPost = async (req, res) => {
       return res.status(422).json({ error: "Please add Image" });
     }
 
-    const imageInfo = UploadImage({
+    const imageInfo = Post({
       original_image,
     });
 
-    const uploadimage = await UploadImage.create(imageInfo);
+    const uploadimage = await Post.create(imageInfo);
     res.status(201).json(uploadimage);
   } catch (error) {
     res.status(400).json({ error: "Something went wrong" });
@@ -78,7 +78,7 @@ exports.createPost = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const postDetails = await UploadImage.find().sort({ date: "DESC" });
+    const postDetails = await Post.find().sort({ date: "DESC" });
     res.status(200).json(postDetails);
   } catch (error) {
     res.status(400).json({ error: "Something went wrong" });
@@ -91,7 +91,7 @@ exports.deletePost = async (req, res) => {
   const postId = { _id: req.params.id };
 
   try {
-    const singlePost = await UploadImage.findOne(postId);
+    const singlePost = await Post.findOne(postId);
     if (!singlePost)
       return res.status(404).json({ error: "Post could not found" });
 
